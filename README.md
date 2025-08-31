@@ -5,5 +5,5 @@
 
 I NEED UR CONTACTS NOWWWWWWWWWW
 
-Derek Ni: https://www.linkedin.com/in/derekni/
+Derek Ni: https://www.linkedin.com/in/derekni/ <br>
 Thomas Huang: https://www.linkedin.com/in/thomashuang0/
