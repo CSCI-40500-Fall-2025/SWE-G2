@@ -5,5 +5,8 @@
 
 I NEED UR CONTACTS NOWWWWWWWWWW
 
+You guys mind if I join this group?
+Eric Lin: https://www.linkedin.com/in/eric-lin-92ba662b3/
+
 Derek Ni: https://www.linkedin.com/in/derekni/ <br>
 Thomas Huang: https://www.linkedin.com/in/thomashuang0/
