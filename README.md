@@ -5,7 +5,7 @@
 
 I NEED UR CONTACTS NOWWWWWWWWWW
 
-You guys mind if I join this group? <br\>
+You guys mind if I join this group? <br>
 Eric Lin: https://www.linkedin.com/in/eric-lin-92ba662b3/
 
 Derek Ni: https://www.linkedin.com/in/derekni/ <br>
