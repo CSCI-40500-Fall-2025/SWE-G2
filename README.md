@@ -10,12 +10,9 @@ Huasheng Ni: https://www.linkedin.com/in/huasheng-ni-73b4b2247/
 huasheng.ni31@myhunter.cuny.edu
 
 
-# Project 10
+# Project 2
 
-## Product Vision
-
-
-Capture!
+## Product Vision: Capture!
 A media app that mixes a diary and social media, where the user can log in.
 User is able to:
 “log” a photo (selected at random from the last 24 hours from their camera roll), then write a description of the photo that was selected, then can post it either privately (no one but you will see), friends only, or public.
