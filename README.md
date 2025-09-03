@@ -13,7 +13,7 @@ Notify user to log for the day
 
 Revenue Options:
 Premium: User is able to reroll 3 times a day AND INCLUDES VIDEOS? or infinite (tbd) for the images.
-ADVERTISEMENTS RAHHHH
+ADVERTISEMENTS 
 
 For individuals
 Who wants to document their life or make a journal 
