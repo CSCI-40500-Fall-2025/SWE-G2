@@ -3,12 +3,48 @@
 
 
 
-I NEED UR CONTACTS NOWWWWWWWWWW
-
-You guys mind if I join this group? <br>
 Eric Lin: https://www.linkedin.com/in/eric-lin-92ba662b3/
-
 Derek Ni: https://www.linkedin.com/in/derekni/ <br>
 Thomas Huang: https://www.linkedin.com/in/thomashuang0/
 Huasheng Ni: https://www.linkedin.com/in/huasheng-ni-73b4b2247/
 huasheng.ni31@myhunter.cuny.edu
+
+
+# Project 10
+
+## Product Vision
+
+
+Capture!
+A media app that mixes a diary and social media, where the user can log in.
+User is able to:
+“log” a photo (selected at random from the last 24 hours from their camera roll), then write a description of the photo that was selected, then can post it either privately (no one but you will see), friends only, or public.
+View your “feed” of those that you are friended, follow, or randoms.
+
+Notify user to log for the day
+
+Revenue Options:
+Premium: User is able to reroll 3 times a day AND INCLUDES VIDEOS? or infinite (tbd) for the images.
+ADVERTISEMENTS RAHHHH
+
+
+
+
+FOR (target customer)
+WHO (statement of the need or opportunity)
+The (PRODUCT NAME) is a (product category)
+THAT (key benefit, compelling reason to buy)
+UNLIKE (primary competitive alternative)
+OUR PRODUCT  (statement of primary differentiation)
+
+For individuals
+Who wants to document their life or make a journal 
+The Capture! is a mix of a journal and a social media app
+That allows users to log their own journeys in life while viewing what others have posted as well
+Unlike Bereal, Capture! has private journaling and optional sharing that lets users share entries with close friends. They make the user take the picture on the spot, making the image feel planned more so than an actual snapshot of your day.
+Our Product prioritizes the idea of ‘capturing the moment’ and the activities throughout your day, giving you a variety of logs. Favoring a more lifestyle post approach than favoring ‘highlights’ and ‘popular’ moments in your life.
+
+Hybrid local-cloud sync
+Mix of local and cloud storage, local when logs are private and cloud for shared online (all logs are sent to local and a copy is made and sent to cloud for shared).
+
+
