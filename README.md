@@ -10,3 +10,5 @@ Eric Lin: https://www.linkedin.com/in/eric-lin-92ba662b3/
 
 Derek Ni: https://www.linkedin.com/in/derekni/ <br>
 Thomas Huang: https://www.linkedin.com/in/thomashuang0/
+Huasheng Ni: https://www.linkedin.com/in/huasheng-ni-73b4b2247/
+huasheng.ni31@myhunter.cuny.edu
