@@ -1,15 +1,6 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/_KG6YNPd)
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=20217788)
 
-
-
-Eric Lin: https://www.linkedin.com/in/eric-lin-92ba662b3/
-Derek Ni: https://www.linkedin.com/in/derekni/ <br>
-Thomas Huang: https://www.linkedin.com/in/thomashuang0/
-Huasheng Ni: https://www.linkedin.com/in/huasheng-ni-73b4b2247/
-huasheng.ni31@myhunter.cuny.edu
-
-
 # Project 2
 
 ## Product Vision: Capture!
@@ -23,16 +14,6 @@ Notify user to log for the day
 Revenue Options:
 Premium: User is able to reroll 3 times a day AND INCLUDES VIDEOS? or infinite (tbd) for the images.
 ADVERTISEMENTS RAHHHH
-
-
-
-
-FOR (target customer)
-WHO (statement of the need or opportunity)
-The (PRODUCT NAME) is a (product category)
-THAT (key benefit, compelling reason to buy)
-UNLIKE (primary competitive alternative)
-OUR PRODUCT  (statement of primary differentiation)
 
 For individuals
 Who wants to document their life or make a journal 
