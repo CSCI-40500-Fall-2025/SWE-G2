@@ -12,13 +12,14 @@ import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Homepage from './src/screens/homepage'; 
 
 // import { onboarding } from './src/screens/onboarding';
 // import { friends } from './src/screens/friends';
 import profile from './src/screens/profile';
 // import { homepage } from './src/screens/homepage';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
 //place holder
@@ -35,11 +36,8 @@ const Onboarding = ({ navigation }: OnboardingProps) => (
     <Button title="test" onPress={() => navigation.replace('HomeTabs')} />
   </SafeAreaView>
 );
-const Homepage = () => (
-  <SafeAreaView>
-    <Text>Homepage</Text>
-  </SafeAreaView>
-);
+
+
 
 const Friends = () => (
   <SafeAreaView>
