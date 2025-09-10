@@ -15,7 +15,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Homepage from './src/screens/homepage'; 
 
 // import { onboarding } from './src/screens/onboarding';
-// import { friends } from './src/screens/friends';
+import Friends from './src/screens/friends';
 import profile from './src/screens/profile';
 // import { homepage } from './src/screens/homepage';
 
@@ -39,11 +39,11 @@ const Onboarding = ({ navigation }: OnboardingProps) => (
 
 
 
-const Friends = () => (
-  <SafeAreaView>
-    <Text>Friends</Text>
-  </SafeAreaView>
-);
+// const Friends = () => (
+//   <SafeAreaView>
+//     <Text>Friends</Text>
+//   </SafeAreaView>
+// );
 //place holder
 
 const HomeTabs: React.FC = () => {

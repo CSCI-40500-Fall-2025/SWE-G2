@@ -2,8 +2,8 @@ import React from 'react';
 //import {Modal, Image, View, Text, Button, StyleSheet, ScrollView} from 'react-native';
 import FriendList from '../components/FriendList';
 //import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
-import { SafeAreaView, View, Text, Image, FlatList, StyleSheet,ScrollView,Button} from 'react-native';
-
+import { View, Text, Image, FlatList, StyleSheet,ScrollView,Button} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const Friends: React.FC = () => {
   const friends = [
   new FriendList('Spongebob', Image.resolveAssetSource(require('../assets/spongebob.jpg')).uri),
@@ -11,7 +11,7 @@ const Friends: React.FC = () => {
   new FriendList('Flats the Flounder',Image.resolveAssetSource(require('../assets/Flats_the_flounder.webp')).uri),
   new FriendList('Bubble Bass',Image.resolveAssetSource(require('../assets/Bubble_bass.webp')).uri),
   ];
-
+  
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.list}>
