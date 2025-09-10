@@ -15,8 +15,7 @@ Revenue Options:
 Premium: User is able to reroll 3 times a day AND INCLUDES VIDEOS? or infinite (tbd) for the images.
 ADVERTISEMENTS 
 
-For individuals
-Who wants to document their life or make a journal 
+**For individuals Who wants to document their life or make a journal**
 The Capture! is a mix of a journal and a social media app
 That allows users to log their own journeys in life while viewing what others have posted as well
 Unlike Bereal, Capture! has private journaling and optional sharing that lets users share entries with close friends. They make the user take the picture on the spot, making the image feel planned more so than an actual snapshot of your day.
@@ -25,4 +24,67 @@ Our Product prioritizes the idea of ‘capturing the moment’ and the activitie
 Hybrid local-cloud sync
 Mix of local and cloud storage, local when logs are private and cloud for shared online (all logs are sent to local and a copy is made and sent to cloud for shared).
 
+# Getting Started
+
+## Requirements
+> **1**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+  **2**: 
+## Start Metro
+
+First, you will need to run **Metro**, the JavaScript build tool for React Native.
+To start the Metro dev server, run the following command from the root of your React Native project:
+
+```sh
+cd FinTrack
+
+# Using npm
+npm start
+
+# OR using Yarn
+yarn start
+```
+
+## Build and run your app
+
+With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+
+### Android
+
+```sh
+# Using npm
+npm run android
+
+# OR using Yarn
+yarn android
+```
+
+### iOS
+
+For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+
+The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+
+```sh
+bundle install
+```
+
+Then, and every time you update your native dependencies, run:
+
+```sh
+bundle exec pod install
+```
+
+For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+
+```sh
+# Using npm
+npm run ios
+
+# OR using Yarn
+yarn ios
+```
+
+If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+
+This is one way to run your app — you can also build it directly from Android Studio or Xcode.
 
