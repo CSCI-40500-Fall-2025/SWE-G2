@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AvatarSection from '../components/AvatarSection';
 import PostsGrid from '../components/PostsGrid';
 
-const ProfileScreen: React.FC = () => {
+const profile: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <AvatarSection />
@@ -22,4 +22,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileScreen;
+export default profile;
