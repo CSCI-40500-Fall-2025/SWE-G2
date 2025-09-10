@@ -71,6 +71,7 @@ bundle install
 Then, and every time you update your native dependencies, run:
 
 ```sh
+cd ios
 bundle exec pod install
 ```
 
