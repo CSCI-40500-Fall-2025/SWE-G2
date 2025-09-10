@@ -1,28 +1,31 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const SignUpForm: React.FC = () => {
+const Signup: React.FC = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState<string[]>(["",""]);
+  const [password, setPassword] = useState<[string,string]>(["",""]);
 
   const handleSignUp = () => {
     if (!email || !password[0] || !password[1]) {
       Alert.alert("Error", "Please fill in the form completely");
       return;
     }
-    if(password[0] != password[1]){
+    if(password[0] !== password[1]){
       Alert.alert("Error", "Please retype the correct password");
     }
     // Replace this with your real sign-in logic (API call, Firebase, etc.)
     Alert.alert("Signed In", `Welcome ${email}`);
   };
   const handleSetPassword = (index: number, value: string) =>{
-    const update = [...password];
+    const update = [...password] as [string,string];
     update[index] = value;
     setPassword(update);
+    
   }
 
   return (
+    <SafeAreaView style={styles.container}>
     <View style={styles.container}>
       <Text style={styles.heading}>Sign Up</Text>
 
@@ -50,8 +53,9 @@ const SignUpForm: React.FC = () => {
         value={password[1]}
         onChangeText={(text) => handleSetPassword(1,text)}
       />
-      <Button title="Sign In" onPress={handleSignUp} />
+      {/* <Button title="Sign In" onPress={handleSignUp} /> */}
     </View>
+    </SafeAreaView>
   );
 };
 
@@ -59,8 +63,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: 20,
+    padding: 50,
     backgroundColor: "#fff",
+    height:'80%',
   },
   heading: {
     fontSize: 24,
@@ -71,10 +76,11 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
-    padding: 12,
+    paddingHorizontal: 50,
+    paddingVertical: 10,
     borderRadius: 8,
     marginBottom: 15,
   },
 });
 
-export default SignUpForm;
+export default Signup;
