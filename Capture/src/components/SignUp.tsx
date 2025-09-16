@@ -9,15 +9,18 @@ const SignUp: React.FC<SignUpFormProps> = ({ onSwitchToSignIn }) => {
     const [confirmPassword, setConfirmPassword] = useState("");
   
     const handleSignUp = () => {
+        // If one of the inputs not filled
       if (!email || !password || !confirmPassword) {
         Alert.alert("Error", "Please fill in the form completely");
         return;
       }
+      // If password and confirm password do not match
       if(password !== confirmPassword){
         Alert.alert("Error", "Passwords do not match.");
         return; 
       }
         Alert.alert("Signed Up", `Welcome ${email}`);
+        // Calls parameter function
         onSwitchToSignIn();
     };
 

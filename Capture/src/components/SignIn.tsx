@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SignInFormProps } from '../types/navigation'; 
-  
+
 const SignIn: React.FC<SignInFormProps> = ({ onSwitchToSignUp,navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

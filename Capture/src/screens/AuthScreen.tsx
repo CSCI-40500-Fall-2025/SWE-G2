@@ -8,7 +8,7 @@ import SignUp from '../components/SignUp';
 import { AuthScreenProps } from '../types/navigation'; 
 
 const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
-    //false = Signup page, true = Signin page
+    // false = Signup page, true = Signin page
     const [isSignUp, setIsSignUp] = useState<boolean>(false);
     // Function to switch to the SignUp form
     const switchToSignUp = () => {
@@ -27,6 +27,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
           <SignUp onSwitchToSignIn={switchToSignUp} />
         ) : (
           <SignIn onSwitchToSignUp={switchToSignIn} 
+          // Navigates to homepage after signing in
+          // Add button that goes back to sign up later 
           navigation={navigation}/>
         )}
       </SafeAreaView>
