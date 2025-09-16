@@ -14,32 +14,30 @@ import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navig
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Homepage from './src/screens/homepage'; 
 
-import Signup from './src/screens/signup';
+// import Signup from './src/screens/signup';
 // import Signin from './src/screens/signin';
 import Friends from './src/screens/friends';
 import profile from './src/screens/profile';
-// import { homepage } from './src/screens/homepage';
+import AuthScreen from './src/screens/AuthScreen';
 
 
 //place holder
 type RootStackParamList = {
-  Onboarding: undefined;
+  AuthScreen: undefined;
   HomeTabs: undefined;
-  // Signup: undefined;
-  // Signin: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
-type OnboardingProps = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
+// type OnboardingProps = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
 
-const Onboarding = ({ navigation }: OnboardingProps) => (
-  <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom:50, backgroundColor:'white',}}>
-    <Signup />
-    <Button title="Sign in" onPress={() => navigation.replace('HomeTabs')} />
-  </SafeAreaView>
-);
+// const Onboarding = ({ navigation }: OnboardingProps) => (
+//   <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom:50, backgroundColor:'white',}}>
+//     <Signup />
+//     <Button title="Sign in" onPress={() => navigation.replace('HomeTabs')} />
+//   </SafeAreaView>
+// );
 
 
 //place holder
@@ -56,7 +54,7 @@ const HomeTabs: React.FC = () => {
       <Tab.Screen name="Homepage" component={Homepage} />
       <Tab.Screen name="profile" component={profile} />
       <Tab.Screen name="friends" component={Friends} />
-      <Tab.Screen name="TEST SIGNUP" component={Onboarding} />
+      <Tab.Screen name="TEST SIGNUP" component={AuthScreen} />
       {/** This will be removed later */}
     </Tab.Navigator>
   );
@@ -66,9 +64,9 @@ const App: React.FC = (): React.JSX.Element => {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Onboarding">
+        <Stack.Navigator initialRouteName="AuthScreen">
 
-          <Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
+          <Stack.Screen name="AuthScreen" component={AuthScreen} options={{ headerShown: false }} />
           <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
