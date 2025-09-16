@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { SignInFormProps } from '../types/navigation'; 
 
-const SignInForm: React.FC = () => {
+const SignIn: React.FC<SignInFormProps> = ({ onSwitchToSignUp,navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -10,12 +12,13 @@ const SignInForm: React.FC = () => {
       Alert.alert("Error", "Please enter both email and password.");
       return;
     }
-    // Replace this with your real sign-in logic (API call, Firebase, etc.)
+
     Alert.alert("Signed In", `Welcome ${email}`);
+    navigation.replace('HomeTabs');
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.heading}>Sign In</Text>
 
       <TextInput
@@ -36,7 +39,7 @@ const SignInForm: React.FC = () => {
       />
 
       <Button title="Sign In" onPress={handleSignIn} />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -62,4 +65,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInForm;
+export default SignIn;
