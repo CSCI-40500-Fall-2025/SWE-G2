@@ -1,67 +1,78 @@
-import React, { useState } from "react";
-import { Text, TextInput, Button, StyleSheet, Alert } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { SignInFormProps } from '../types/navigation'; 
+// components/SignIn.tsx
+import React from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-const SignIn: React.FC<SignInFormProps> = ({ onSwitchToSignUp,navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+interface SignInProps {
+  onSwitchToSignUp: () => void;
+  navigation: any;
+}
 
+const SignIn: React.FC<SignInProps> = ({ onSwitchToSignUp, navigation }) => {
   const handleSignIn = () => {
-    if (!email || !password) {
-      Alert.alert("Error", "Please enter both email and password.");
-      return;
-    }
-
-    Alert.alert("Signed In", `Welcome ${email}`);
-    navigation.replace('HomeTabs');
+    // Handle sign in logic here
+    console.log('Signing in...');
+    
+    // Navigate to HomeTabs (which contains the Friends tab)
+    navigation.navigate('HomeTabs');
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.heading}>Sign In</Text>
-
+    <View style={styles.container}>
+      <Text style={styles.title}>Sign In</Text>
+      
       <TextInput
         style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        value={email}
-        onChangeText={setEmail}
+        placeholder="Email or Username"
+        placeholderTextColor="#999"
       />
-
+      
       <TextInput
         style={styles.input}
         placeholder="Password"
+        placeholderTextColor="#999"
         secureTextEntry
-        value={password}
-        onChangeText={setPassword}
       />
-
-      <Button title="Sign In" onPress={handleSignIn} />
-    </SafeAreaView>
+      
+      <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
+        <Text style={styles.signInButtonText}>Sign In</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     padding: 20,
-    backgroundColor: "#fff",
+    justifyContent: 'center',
   },
-  heading: {
-    fontSize: 24,
-    fontWeight: "600",
-    marginBottom: 20,
-    textAlign: "center",
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 30,
+    color: '#333',
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 12,
+    borderColor: '#ddd',
     borderRadius: 8,
+    padding: 15,
     marginBottom: 15,
+    fontSize: 16,
+    backgroundColor: 'white',
+  },
+  signInButton: {
+    backgroundColor: '#007AFF',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  signInButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

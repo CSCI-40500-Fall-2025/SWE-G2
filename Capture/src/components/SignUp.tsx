@@ -1,86 +1,257 @@
+// components/SignUp.tsx
 import React, { useState } from 'react';
-import { Text, TextInput, Alert,StyleSheet, Button } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { SignUpFormProps } from '../types/navigation'; 
-  
-const SignUp: React.FC<SignUpFormProps> = ({ onSwitchToSignIn }) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-  
-    const handleSignUp = () => {
-        // If one of the inputs not filled
-      if (!email || !password || !confirmPassword) {
-        Alert.alert("Error", "Please fill in the form completely");
-        return;
-      }
-      // If password and confirm password do not match
-      if(password !== confirmPassword){
-        Alert.alert("Error", "Passwords do not match.");
-        return; 
-      }
-        Alert.alert("Signed Up", `Welcome ${email}`);
-        // Calls parameter function
-        onSwitchToSignIn();
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+
+interface SignUpProps {
+  onSwitchToSignIn: () => void;
+}
+
+const SignUp: React.FC<SignUpProps> = ({ onSwitchToSignIn }) => {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [errors, setErrors] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    // Clear error when user starts typing
+    if (errors[field as keyof typeof errors]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: ''
+      }));
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors = {
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
     };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.heading}>Sign Up</Text>
+    let isValid = true;
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        value={email}
-        onChangeText={setEmail}
-        textContentType="emailAddress"
-      />
+    // Username validation
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required';
+      isValid = false;
+    } else if (formData.username.length < 3) {
+      newErrors.username = 'Username must be at least 3 characters';
+      isValid = false;
+    }
+
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+      isValid = false;
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+      isValid = false;
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+      isValid = false;
+    }
+
+    // Confirm password validation
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+      isValid = false;
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSignUp = () => {
+    if (validateForm()) {
+      // Form is valid - proceed with sign up
+      console.log('Sign up data:', formData);
       
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry={true} 
-        value={password}
-        onChangeText={setPassword}
-        textContentType="oneTimeCode"
-      />
+      // Here you would typically make an API call to your backend
+      // For now, we'll simulate a successful sign up
+      
+      Alert.alert(
+        'Success!',
+        'Account created successfully! Please sign in.',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Clear form and switch to sign in
+              setFormData({
+                username: '',
+                email: '',
+                password: '',
+                confirmPassword: ''
+              });
+              onSwitchToSignIn();
+            }
+          }
+        ]
+      );
+    } else {
+      // Form is invalid - show error message
+      Alert.alert('Error', 'Please fix the errors in the form');
+    }
+  };
 
-      <TextInput
-        style={styles.input}
-        placeholder="Retype Password"
-        secureTextEntry={true} 
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        textContentType="oneTimeCode"
-      />
-      <Button title="Sign In" onPress={handleSignUp} />
-    </SafeAreaView>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Create Account</Text>
+      
+      {/* Username Field */}
+      <View>
+        <TextInput
+          style={[styles.input, errors.username && styles.inputError]}
+          placeholder="Username"
+          placeholderTextColor="#999"
+          autoCapitalize="none"
+          autoComplete="username"
+          value={formData.username}
+          onChangeText={(text) => handleInputChange('username', text)}
+        />
+        {errors.username ? <Text style={styles.errorText}>{errors.username}</Text> : null}
+      </View>
+      
+      {/* Email Field */}
+      <View>
+        <TextInput
+          style={[styles.input, errors.email && styles.inputError]}
+          placeholder="Email"
+          placeholderTextColor="#999"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoComplete="email"
+          value={formData.email}
+          onChangeText={(text) => handleInputChange('email', text)}
+        />
+        {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+      </View>
+      
+      {/* Password Field */}
+      <View>
+        <TextInput
+          style={[styles.input, errors.password && styles.inputError]}
+          placeholder="Password"
+          placeholderTextColor="#999"
+          secureTextEntry
+          textContentType="newPassword"
+          autoComplete="new-password"
+          autoCapitalize="none"
+          value={formData.password}
+          onChangeText={(text) => handleInputChange('password', text)}
+        />
+        {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
+      </View>
+      
+      {/* Confirm Password Field */}
+      <View>
+        <TextInput
+          style={[styles.input, errors.confirmPassword && styles.inputError]}
+          placeholder="Confirm Password"
+          placeholderTextColor="#999"
+          secureTextEntry
+          textContentType="newPassword"
+          autoComplete="new-password"
+          autoCapitalize="none"
+          value={formData.confirmPassword}
+          onChangeText={(text) => handleInputChange('confirmPassword', text)}
+        />
+        {errors.confirmPassword ? <Text style={styles.errorText}>{errors.confirmPassword}</Text> : null}
+      </View>
+      
+      <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
+        <Text style={styles.signUpButtonText}>Create Account</Text>
+      </TouchableOpacity>
+      
+      <View style={styles.switchContainer}>
+        <Text style={styles.switchText}>Already have an account? </Text>
+        <TouchableOpacity onPress={onSwitchToSignIn}>
+          <Text style={styles.switchLink}>Sign In</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    padding: 50,
-    backgroundColor: "#fff",
-    height:'80%',
+    padding: 20,
+    justifyContent: 'center',
   },
-  heading: {
-    fontSize: 24,
-    fontWeight: "600",
-    marginBottom: 20,
-    textAlign: "center",
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 30,
+    color: '#333',
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    paddingHorizontal: 50,
-    paddingVertical: 10,
+    borderColor: '#ddd',
     borderRadius: 8,
-    marginBottom: 15,
+    padding: 15,
+    marginBottom: 5, // Reduced margin since error text will take space
+    fontSize: 16,
+    backgroundColor: 'white',
+  },
+  inputError: {
+    borderColor: '#FF3B30',
+  },
+  errorText: {
+    color: '#FF3B30',
+    fontSize: 14,
+    marginBottom: 10,
+    marginLeft: 5,
+  },
+  signUpButton: {
+    backgroundColor: '#007AFF',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  signUpButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  switchText: {
+    fontSize: 16,
+    color: '#666',
+  },
+  switchLink: {
+    fontSize: 16,
+    color: '#007AFF',
+    fontWeight: '600',
   },
 });
 

@@ -12,12 +12,12 @@ import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Homepage from './src/screens/homepage'; 
+import Homepage from './src/screens/Homepage'; 
 
 // import Signup from './src/screens/signup';
 // import Signin from './src/screens/signin';
-import Friends from './src/screens/friends';
-import profile from './src/screens/profile';
+import Friends from './src/screens/Friends';
+import profile from './src/screens/Profile';
 import AuthScreen from './src/screens/AuthScreen';
 
 
@@ -52,8 +52,8 @@ const HomeTabs: React.FC = () => {
       }}
     >
       <Tab.Screen name="Homepage" component={Homepage} />
-      <Tab.Screen name="profile" component={profile} />
-      <Tab.Screen name="friends" component={Friends} />
+      <Tab.Screen name="Profile" component={profile} />
+      <Tab.Screen name="Friends" component={Friends} />
       <Tab.Screen name="TEST SIGNUP" component={AuthScreen} />
       {/** This will be removed later */}
     </Tab.Navigator>
