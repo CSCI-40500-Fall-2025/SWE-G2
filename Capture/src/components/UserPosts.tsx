@@ -1,15 +1,25 @@
-export default class UserPosts { //simple class to hold user posts data
-    userID: string;
-    dateofPost: Date;
-    imageURL: string
-    description: string
-    constructor(userID: string, dateofPost: Date, imageURL: string, description: string) {
-        this.userID = userID;
-        this.dateofPost = dateofPost;
-        this.imageURL = imageURL;
-        this.description = description;
-    }
+export default class UserPosts {
+  userID: string;
+  dateofPost: Date;
+  imageURL: string;
+  description: string;
+  profilePhotoURL: string; // NEW
+
+  constructor(
+    userID: string,
+    dateofPost: Date,
+    imageURL: string,
+    description: string,
+    profilePhotoURL: string // NEW
+  ) {
+    this.userID = userID;
+    this.dateofPost = dateofPost;
+    this.imageURL = imageURL;
+    this.description = description;
+    this.profilePhotoURL = profilePhotoURL; // NEW
+  }
 }
+
 
 
 //test for user data pop up link

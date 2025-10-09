@@ -1,30 +1,77 @@
 import React from 'react';
-import {Modal, Image, View, Text, Button, StyleSheet, ScrollView} from 'react-native';
+import { Image, View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Platform } from 'react-native';
 import UserPosts from '../components/UserPosts';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-type UserPostPopupProps = { 
-  visible: boolean; //controls visibility of the modal
-  onClose: () => void; //function to close the modal
-  post: UserPosts | null; //the user post data to display
-};
 
+const screenWidth = Dimensions.get('window').width;
 
 const Homepage: React.FC = () => {
-    const posts = [
-    new UserPosts('FroakieNumber1Fan', new Date(), Image.resolveAssetSource(require('../assets/froakie.webp')).uri, 'Look what I caught bro'), // Example local image 
-    new UserPosts('DigginYoButtTwin', new Date(2024, 6, 7), 'https://static.wikia.nocookie.net/ficspecies/images/7/7a/Diglett.png/revision/latest?cb=20190806222311', 'Me when the gang pull up'),
-    new UserPosts('MouseYN', new Date(2022, 11, 1), 'https://static0.thegamerimages.com/wordpress/wp-content/uploads/2022/11/maushold.jpg', 'Too many mouthes to feed'),
+  const posts = [
+    new UserPosts(
+      'FroakieNumber1Fan',
+      new Date(),
+      Image.resolveAssetSource(require('../assets/froakie.webp')).uri,
+      'Look what I caught bro',
+      'https://i.pravatar.cc/150?img=15'
+    ),
+    new UserPosts(
+      'DigletInYoBooty',
+      new Date(2024, 6, 7),
+'https://static.wikia.nocookie.net/ficspecies/images/7/7a/Diglett.png/revision/latest?cb=20190806222311',      'Me when the gang pull up',
+      'https://i.pravatar.cc/150?img=22'
+    ),
+    new UserPosts(
+      'MouseholdTheHousehold',
+      new Date(2022, 11, 1),
+'https://static0.thegamerimages.com/wordpress/wp-content/uploads/2022/11/maushold.jpg',      'Too many mouthes to feed',
+      'https://i.pravatar.cc/150?img=4'
+    ),
   ];
+
+  const handleProfilePress = () => {
+    // 👇 later, navigate to EditProfile or Profile screen
+    console.log("Profile icon pressed!");
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.feedContainer}>
+    <SafeAreaView style={styles.container}>
+      {/* --- HEADER BAR --- */}
+      <View style={styles.headerBar}>
+        <Text style={styles.appTitle}>Capture</Text>
+
+        <TouchableOpacity onPress={handleProfilePress}>
+          <Image
+            source={{ uri: 'https://picsum.photos/100' }}
+            style={styles.profileIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* --- FEED --- */}
+      <ScrollView
+        contentContainerStyle={styles.feedContainer}
+        showsVerticalScrollIndicator={false}
+      >
         {posts.map((post, idx) => (
-          <View key={idx} style={styles.card}>
+          <View key={idx} style={styles.postContainer}>
+            {/* Header */}
+            <View style={styles.postHeader}>
+              <Image source={{ uri: post.profilePhotoURL }} style={styles.avatar} />
+              <View style={styles.userMeta}>
+                <Text style={styles.username}>{post.userID}</Text>
+                <Text style={styles.date}>{post.dateofPost.toDateString()}</Text>
+              </View>
+            </View>
+
+            {/* Post image */}
             <Image source={{ uri: post.imageURL }} style={styles.image} />
-            <Text style={styles.username}>{post.userID}</Text>
-            <Text style={styles.date}>{post.dateofPost.toDateString()}</Text>
+
+            {/* Caption */}
             <Text style={styles.description}>{post.description}</Text>
+
+            {/* Divider */}
+            {idx !== posts.length - 1 && <View style={styles.divider} />}
           </View>
         ))}
       </ScrollView>
@@ -32,70 +79,81 @@ const Homepage: React.FC = () => {
   );
 };
 
-
-
-
 const styles = StyleSheet.create({
-//   modalBackground: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//   },
-//   modalContainer: {
-//     width: '80%',
-//     padding: 20,
-//     backgroundColor: 'white',
-//     borderRadius: 10,
-//     alignItems: 'center',
-//   },
-//   title: {
-//     fontSize: 20,
-//     fontWeight: 'bold',
-//     marginBottom: 10,
-//   },
-    feedContainer: {
-    padding: 16,
-    alignItems: 'center',
+  container: {
+    flex: 1,
+    backgroundColor: '#fafafa',
   },
-  card: {
-    width: '95%',
+  headerBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 18,
+    paddingVertical: 10,
     backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 4,
-    marginBottom: 16,
-    alignItems: 'center',
-    overflow: 'hidden',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#ddd',
   },
-  image: {
-    width: '100%',
-    height: 300,
-    borderRadius: 8,
-    marginBottom: 8,
+  appTitle: {
+    fontSize: 28,
+    letterSpacing: 0.5,
+    fontFamily: Platform.select({
+      ios: 'Avenir-Heavy',
+      android: 'sans-serif-medium',
+    }),
+  },
+  profileIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: '#eee',
   },
+
+
+  // --- Feed / posts ---
+  feedContainer: {
+    paddingBottom: 40,
+  },
+  postContainer: {
+    width: screenWidth,
+    backgroundColor: '#fff',
+  },
+  postHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  avatar: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#ddd',
+  },
+  userMeta: {
+    marginLeft: 10,
+  },
   username: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginBottom: 4,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
+    fontWeight: '700',
+    fontSize: 16,
   },
   date: {
     fontSize: 12,
     color: '#888',
-    marginBottom: 8,
+  },
+  image: {
+    width: '100%',
+    height: 400,
+    backgroundColor: '#eee',
   },
   description: {
-    fontSize: 16,
-    textAlign: 'center',
+    fontSize: 15,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  divider: {
+    height: 8,
+    backgroundColor: '#f0f0f0',
   },
 });
 
