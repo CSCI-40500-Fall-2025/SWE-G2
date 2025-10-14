@@ -7,19 +7,19 @@
 
 import React from 'react';
 import { Text, Button} from 'react-native';
-import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Homepage from './src/screens/Homepage'; 
+import Homepage from './src/screens/homepage'; 
 
 // import Signup from './src/screens/signup';
 // import Signin from './src/screens/signin';
-import Friends from './src/screens/Friends';
-import profile from './src/screens/Profile';
+import Friends from './src/screens/friends';
+import profile from './src/screens/profile';
 import AuthScreen from './src/screens/AuthScreen';
-
+import CameraScreen from './src/screens/CameraScreen';
 
 //place holder
 type RootStackParamList = {
@@ -53,8 +53,10 @@ const HomeTabs: React.FC = () => {
     >
       <Tab.Screen name="Homepage" component={Homepage} />
       <Tab.Screen name="Profile" component={profile} />
+      <Tab.Screen name="Camera" component={CameraScreen} />
       <Tab.Screen name="Friends" component={Friends} />
       <Tab.Screen name="TEST SIGNUP" component={AuthScreen} />
+
       {/** This will be removed later */}
     </Tab.Navigator>
   );
