@@ -89,3 +89,28 @@ If everything is set up correctly, you should see your new app running in the An
 
 This is one way to run your app — you can also build it directly from Android Studio or Xcode.
 
+## Layered Software Architecture
+
+
+<img width="969" height="1090" alt="image" src="https://github.com/user-attachments/assets/8a103706-3aeb-4f10-bd9f-67051583efa8" />
+<img width="950" height="727" alt="image" src="https://github.com/user-attachments/assets/08d31534-7f8c-4da5-8a6b-f125a6d8f310" />
+
+
+
+User Interface
+Framework: React Native (current stack)
+Navigation: React Navigation
+UI Components: React Native Elements or NativeBase
+Image Handling: react-native-image-picker
+
+Authentication & User Interaction
+Auth Service: Creating our own Authentication
+Session Management:  ??? + Context API + React Navigation
+
+Application-Specific Functionality
+Photo Processing: react-native-camera, react-native-video
+
+Basic Shared Services
+Cloud Storage: MongoDB
+
+
