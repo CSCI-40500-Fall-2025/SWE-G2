@@ -79,7 +79,7 @@ const CameraScreen: React.FC = () => {
     try {
       const newStatus: CameraPermissionStatus = await Camera.requestCameraPermission();
 
-      if (newStatus === 'authorized') {
+      if (newStatus === 'granted') {
         setPermissionStatus(newStatus);
       } else {
         Alert.alert(
