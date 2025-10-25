@@ -1,7 +1,6 @@
-// components/SignUp.tsx
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-
+import { validateUsername, validateEmail, validatePassword, validateConfirmPassword} from '../utils/validation';
 interface SignUpProps {
   onSwitchToSignIn: () => void;
 }
@@ -25,7 +24,7 @@ const SignUp: React.FC<SignUpProps> = ({ onSwitchToSignIn }) => {
       ...prev,
       [field]: value
     }));
-    // Clear error when user starts typing
+    //clear error when user starts typing
     if (errors[field as keyof typeof errors]) {
       setErrors(prev => ({
         ...prev,
@@ -44,39 +43,34 @@ const SignUp: React.FC<SignUpProps> = ({ onSwitchToSignIn }) => {
 
     let isValid = true;
 
-    // Username validation
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
-      isValid = false;
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
+    //username validation
+    const usernameCheck = validateUsername(formData.username);
+    if (!usernameCheck.valid) {
+      newErrors.username = usernameCheck.error;
       isValid = false;
     }
 
-    // Email validation
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+    //email validation
+    const emailCheck = validateEmail(formData.email);
+    if (!emailCheck.valid) {
+      newErrors.email = emailCheck.error;
       isValid = false;
     }
 
-    // Password validation
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-      isValid = false;
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    //password validation
+    const passwordCheck = validatePassword(formData.password);
+    if (!passwordCheck.valid) {
+      newErrors.password = passwordCheck.error;
       isValid = false;
     }
 
-    // Confirm password validation
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-      isValid = false;
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+    //confirm password validation
+    const confirmCheck = validateConfirmPassword(
+      formData.password,
+      formData.confirmPassword
+    );
+    if (!confirmCheck.valid) {
+      newErrors.confirmPassword = confirmCheck.error;
       isValid = false;
     }
 

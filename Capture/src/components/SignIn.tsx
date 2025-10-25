@@ -1,20 +1,55 @@
-// components/SignIn.tsx
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-
+import { validateEmail, validateSignInPassword } from "../utils/validation";
 interface SignInProps {
   onSwitchToSignUp: () => void;
   navigation: any;
 }
 
 const SignIn: React.FC<SignInProps> = ({ onSwitchToSignUp, navigation }) => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [errors, setErrors] = useState({
+    email: '',
+    password: ''
+  });
+  
   const handleSignIn = () => {
-    // Handle sign in logic here
-    console.log('Signing in...');
     
-    // Navigate to HomeTabs (which contains the Friends tab)
+    //error state structure
+    const newErrors = {
+      email: '',
+      password: '',
+    };
+    let isValid = true;
+
+    //email validation
+    const emailCheck = validateEmail(formData.email);
+    if (!emailCheck.valid) {
+      newErrors.email = emailCheck.error;
+      isValid = false;
+    }
+
+    //password validation
+    const passwordCheck = validateSignInPassword(formData.password);
+    if (!passwordCheck.valid) {
+      newErrors.password = passwordCheck.error;
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+
+    // if (!isValid) {
+    //   console.log('Validation failed:', newErrors);
+    //   return; //stop here if invalid input
+    // }
+
+    //if everything is valid, continue sign-in logic
+    console.log('Validation passed. Navigating to HomeTabs...');
     navigation.navigate('HomeTabs');
-  };
+    };
 
   return (
     <View style={styles.container}>
