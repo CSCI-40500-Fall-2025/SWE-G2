@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Run tests
-        run: npm test
+        run: npm run test
         working-directory: Capture
 
       - name: Checkout repo
