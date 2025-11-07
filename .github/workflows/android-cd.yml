@@ -10,9 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Run tests
-        run: npm run test
-        working-directory: Capture
 
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -30,6 +27,10 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: Capture
+
+      - name: Run tests
+        run: npm run test
         working-directory: Capture
         
       - name: Build Android Release
