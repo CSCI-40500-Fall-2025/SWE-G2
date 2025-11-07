@@ -16,9 +16,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Camera, useCameraDevice, PhotoFile, CameraPermissionStatus } from 'react-native-vision-camera';
 
-
 const CameraScreen: React.FC = () => {
-
+  
   const camera = useRef<Camera | null>(null);
   const device = useCameraDevice('back');
 

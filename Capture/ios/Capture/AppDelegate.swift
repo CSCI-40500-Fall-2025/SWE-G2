@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     reactNativeDelegate = delegate
     reactNativeFactory = factory
-    
+      
     window = UIWindow(frame: UIScreen.main.bounds)
 
     factory.startReactNative(

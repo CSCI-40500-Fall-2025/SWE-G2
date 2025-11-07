@@ -1,0 +1,7 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme Release -archivePath build/Capture.xcarchive archive
+
+User defaults from command line:
+    IDEArchivePathOverride = /Users/thomas/Desktop/Projects/SWE-G2/Capture/ios/build/Capture.xcarchive
+    IDEPackageSupportUseBuiltinSCM = YES
+
