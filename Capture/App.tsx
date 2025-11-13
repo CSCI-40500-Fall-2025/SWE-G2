@@ -16,8 +16,8 @@ import Homepage from './src/screens/homepage';
 
 // import Signup from './src/screens/signup';
 // import Signin from './src/screens/signin';
-import Friends from './src/screens/friends';
-import profile from './src/screens/profile';
+import Friends from './src/screens/Friends';
+import Profile from './src/screens/Profile';
 import AuthScreen from './src/screens/AuthScreen';
 import CameraScreen from './src/screens/CameraScreen';
 
@@ -52,7 +52,7 @@ const HomeTabs: React.FC = () => {
       }}
     >
       <Tab.Screen name="Homepage" component={Homepage} />
-      <Tab.Screen name="Profile" component={profile} />
+      <Tab.Screen name="Profile" component={Profile} />
       <Tab.Screen name="Camera" component={CameraScreen} />
       <Tab.Screen name="Friends" component={Friends} />
       <Tab.Screen name="TEST SIGNUP" component={AuthScreen} />
