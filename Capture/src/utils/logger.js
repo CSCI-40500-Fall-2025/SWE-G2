@@ -1,58 +1,45 @@
 // src/utils/logger.js
-import { logger } from 'react-native-logs';
+import { logger } from "react-native-logs";
 import * as Sentry from '@sentry/react-native';
 
-// Create a proper transport object
-const SentryTransport = {
-  log: (level, message, additionalData = {}) => {
-    // Don't send debug logs to Sentry - omits CI logs from monitoring
-    if (level === 'debug') return;
-    
-    switch(level) {
-      case 'fatal':
-        Sentry.captureException(new Error(message), {
-          tags: { type: 'fatal' },
-          extra: additionalData
-        });
-        break;
-      case 'error':
-        Sentry.captureException(new Error(message), {
-          tags: { type: 'error' },
-          extra: additionalData
-        });
-        break;
-      case 'warn':
-        Sentry.captureMessage(message, {
-          level: 'warning',
-          extra: additionalData
-        });
-        break;
-      case 'info':
-        // Info logs don't go to Sentry
-        break;
-    }
+// Create a proper transport FUNCTION
+const SentryTransport = (props) => {
+  const { level, rawMsg } = props;
+  
+  // Get the message from rawMsg array
+  const message = Array.isArray(rawMsg) ? rawMsg[0] : rawMsg;
+  
+  // Map levels to Sentry
+  switch(level?.text) {
+    case 'debug':
+      Sentry.captureMessage(message, 'debug');
+      break;
+    case 'info':
+      Sentry.captureMessage(message, 'info');
+      break;
+    case 'warn':
+      Sentry.captureMessage(message, 'warning');
+      break;
+    case 'error':
+      Sentry.captureMessage(message, 'error');
+      break;
+    case 'fatal':
+      Sentry.captureMessage(message, 'fatal');
+      break;
   }
 };
 
 const config = {
   levels: {
-    fatal: 0,
-    error: 1,  
+    debug: 0,
+    info: 1,
     warn: 2,
-    info: 3,
-    debug: 4
+    error: 3,
+    fatal: 4
   },
-  severity: process.env.CI ? 'debug' : 'warn',
-  transport: SentryTransport, // Use the object directly, not in array
-  transportOptions: {
-    colors: {
-      fatal: 'red',
-      error: 'red',
-      warn: 'yellow',
-      info: 'blue',
-      debug: 'gray'
-    }
-  }
+  severity: 'debug', // Show all levels
+  transport: SentryTransport, // Function, not object
+  enabled: true
 };
 
 const log = logger.createLogger(config);
