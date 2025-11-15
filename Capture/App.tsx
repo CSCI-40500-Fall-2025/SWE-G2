@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, Button} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -20,6 +20,27 @@ import Friends from './src/screens/Friends';
 import Profile from './src/screens/Profile';
 import AuthScreen from './src/screens/AuthScreen';
 import CameraScreen from './src/screens/CameraScreen';
+import * as Sentry from '@sentry/react-native';
+import log from './src/utils/logger'; // Add this import
+
+Sentry.init({
+  dsn: 'https://8ba65d59fcc2de5335f55531021b0a77@o4510370827534350.ingest.us.sentry.io/4510370828713984',
+
+  // Adds more context data to events (IP address, cookies, user, etc.)
+  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
+  sendDefaultPii: true,
+
+  // Enable Logs
+  enableLogs: true,
+
+  // Configure Session Replay
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1,
+  integrations: [Sentry.mobileReplayIntegration()],
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 
 //place holder
 type RootStackParamList = {
@@ -43,6 +64,15 @@ const Tab = createBottomTabNavigator();
 //place holder
 
 const HomeTabs: React.FC = () => {
+  // Test logging in HomeTabs component
+  useEffect(() => {
+    log.debug('DEBUG: HomeTabs navigation initialized');
+    log.info('INFO: HomeTabs component mounted');
+    log.warn('WARN: HomeTabs - default route set');
+    log.error('ERROR: HomeTabs - navigation state issue');
+    log.fatal('FATAL: HomeTabs - critical navigation failure');
+  }, []);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -63,6 +93,15 @@ const HomeTabs: React.FC = () => {
 };  
 
 const App: React.FC = (): React.JSX.Element => {
+  // Test all 5 log levels when app starts
+  useEffect(() => {
+    log.debug('DEBUG: App component mounted - detailed initialization');
+    log.info('INFO: App started successfully');
+    log.warn('WARN: App - checking for potential issues');
+    log.error('ERROR: App - configuration validation failed');
+    log.fatal('FATAL: App - critical startup failure');
+  }, []);
+
   return (
     <SafeAreaProvider>
       <NavigationContainer>
@@ -75,4 +114,4 @@ const App: React.FC = (): React.JSX.Element => {
     </SafeAreaProvider>
   );
 };
-export default App;
+export default Sentry.wrap(App);

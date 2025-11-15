@@ -1,7 +1,8 @@
 import React from 'react';
-import { Image, View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Platform } from 'react-native';
+import { Image, View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Platform, Button } from 'react-native';
 import UserPosts from '../components/UserPosts';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Sentry from '@sentry/react-native'; // Add this import
 
 
 const screenWidth = Dimensions.get('window').width;
@@ -34,7 +35,12 @@ const Homepage: React.FC = () => {
     console.log("Profile icon pressed!");
   };
 
-  return (
+  const handleSentryTest = () => {
+    Sentry.captureException(new Error('First error'));
+    console.log('Test error sent to Sentry');
+  };
+  
+return (
     <SafeAreaView style={styles.container}>
       {/* --- HEADER BAR --- */}
       <View style={styles.headerBar}>
@@ -74,6 +80,11 @@ const Homepage: React.FC = () => {
             {idx !== posts.length - 1 && <View style={styles.divider} />}
           </View>
         ))}
+        
+        {/* Sentry Test Button at the end */}
+        <View style={styles.testButtonContainer}>
+          <Button title='Test Sentry Error' onPress={handleSentryTest} />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -107,6 +118,14 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     backgroundColor: '#eee',
+  },
+  testButtonContainer: {
+    padding: 20,
+    alignItems: 'center',
+    marginTop: 20,
+    backgroundColor: '#fff',
+    marginHorizontal: 10,
+    borderRadius: 8,
   },
 
 
