@@ -2,8 +2,9 @@
 import { logger } from 'react-native-logs';
 import * as Sentry from '@sentry/react-native';
 
-class SentryTransport {
-  log(level, message, additionalData = {}) {
+// Create a proper transport object
+const SentryTransport = {
+  log: (level, message, additionalData = {}) => {
     // Don't send debug logs to Sentry - omits CI logs from monitoring
     if (level === 'debug') return;
     
@@ -31,27 +32,25 @@ class SentryTransport {
         break;
     }
   }
-}
+};
 
 const config = {
   levels: {
-    fatal: 0,    // 5x required
-    error: 1,    // 10x required  
-    warn: 2,     // 20x required
-    info: 3,     // 20x required
-    debug: 4     // 10x required - your "fine" level for CI
+    fatal: 0,
+    error: 1,  
+    warn: 2,
+    info: 3,
+    debug: 4
   },
-  // ✅ CI gets ALL logs (lowest level - debug)
-  // ✅ Production gets only warnings and above
   severity: process.env.CI ? 'debug' : 'warn',
-  transport: [console, new SentryTransport()],
+  transport: SentryTransport, // Use the object directly, not in array
   transportOptions: {
     colors: {
       fatal: 'red',
       error: 'red',
       warn: 'yellow',
       info: 'blue',
-      debug: 'gray'  // Your "fine" level
+      debug: 'gray'
     }
   }
 };
