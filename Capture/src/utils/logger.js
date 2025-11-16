@@ -8,7 +8,8 @@ const SentryTransport = (props) => {
   
   // Get the message from rawMsg array
   const message = Array.isArray(rawMsg) ? rawMsg[0] : rawMsg;
-  
+  console.log(`[${level?.text?.toUpperCase()}] ${message}`);
+
   // Map levels to Sentry
   switch(level?.text) {
     case 'debug':
