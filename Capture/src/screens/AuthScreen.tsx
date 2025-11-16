@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import SignIn from '../components/SignIn';
 import SignUp from '../components/SignUp';
+import log from '../utils/logger'; // Add logger import
 
 interface AuthScreenProps {
   navigation: any;
@@ -12,16 +13,29 @@ interface AuthScreenProps {
 const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   const [isSignUp, setIsSignUp] = React.useState<boolean>(false);
 
+  // Component lifecycle logs with error focus
+  React.useEffect(() => {
+    // DEBUG (1x)
+    log.debug("DEBUG: AuthScreen mounted - initializing authentication flow");
+  }, []);
+
   const switchToSignUp = () => {
+    // INFO (1x)
+    log.info("INFO: User selected SignUp option");
     setIsSignUp(true);
   };
 
   const switchToSignIn = () => {
+    // INFO (1x)
+    log.info("INFO: User selected SignIn option");
     setIsSignUp(false);
   };
 
   // If user wants to sign up, show the SignUp component
   if (isSignUp) {
+    // INFO (1x)
+    log.info("INFO: Rendering SignUp component - new user registration");
+    
     return (
       <SafeAreaView style={styles.flexContainer}>
         <StatusBar barStyle="dark-content" />
@@ -30,7 +44,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
     );
   }
 
-  // Default: Show Sign In with a Sign Up button
   return (
     <SafeAreaView style={styles.flexContainer}>
       <StatusBar barStyle="dark-content" />
@@ -44,7 +57,14 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
       {/* Sign Up Button */}
       <View style={styles.signUpContainer}>
         <Text style={styles.signUpText}>Don't have an account?</Text>
-        <TouchableOpacity style={styles.signUpButton} onPress={switchToSignUp}>
+        <TouchableOpacity 
+          style={styles.signUpButton} 
+          onPress={switchToSignUp}
+          onPressIn={() => {
+            // DEBUG (1x)
+            log.debug("DEBUG: SignUp button pressed - user interaction detected");
+          }}
+        >
           <Text style={styles.signUpButtonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>

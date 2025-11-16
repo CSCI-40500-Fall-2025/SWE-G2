@@ -54,19 +54,19 @@ const HomeTabs: React.FC = () => {
           
           switch(tabName) {
             case 'Homepage':
-              log.debug("User navigating to Homepage");
+              log.info("User navigating to Homepage");
               break;
             case 'Profile':
               log.info("User accessing Profile");
               break;
             case 'Camera':
-              log.warn("User opening Camera");
+              log.info("User opening Camera");
               break;
             case 'Friends':
-              log.error("User accessing Friends");
+              log.info("User accessing Friends");
               break;
             case 'TEST SIGNUP':
-              log.fatal("User accessing Auth screen");
+              log.info("User accessing Auth screen");
               break;
           }
         },

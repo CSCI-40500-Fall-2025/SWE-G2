@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Camera, useCameraDevice, PhotoFile, CameraPermissionStatus } from 'react-native-vision-camera';
+import log from '../utils/logger'; // Add logger import
 
 const CameraScreen: React.FC = () => {
   
@@ -41,7 +42,7 @@ const CameraScreen: React.FC = () => {
     const checkPermission = async () => {
       try {
         const status: CameraPermissionStatus = await Camera.getCameraPermissionStatus();
-
+        log.info(`INFO: Camera permission status - ${status}`);
         //if permission status is not-determined, request permission
         if (status === 'not-determined') {
           const newStatus: CameraPermissionStatus = await Camera.requestCameraPermission();
@@ -51,6 +52,7 @@ const CameraScreen: React.FC = () => {
         }
       } catch (e) {
         console.warn('Permission check error', e);
+        log.fatal("FATAL: CameraScreen - permission check failure");
         setPermissionStatus('denied');
       }
     };
@@ -67,6 +69,7 @@ const CameraScreen: React.FC = () => {
       setPhoto(p);
     } catch (e) {
       console.error('takePhoto error', e);
+      log.error("ERROR: CameraScreen - photo capture failed");
       Alert.alert('Error', 'Could not take photo. Please try again.');
     } finally {
       setIsTaking(false);
@@ -81,6 +84,7 @@ const CameraScreen: React.FC = () => {
       if (newStatus === 'granted') {
         setPermissionStatus(newStatus);
       } else {
+        log.warn("WARNING: CameraScreen - user denied camera permission again");
         Alert.alert(
           'Permission Denied',
           'Please enable camera access in your device settings.',
@@ -97,6 +101,7 @@ const CameraScreen: React.FC = () => {
         );
       }
     } catch (e) {
+      log.error("ERROR: CameraScreen - error requesting camera permission");
       console.warn(e);
     }
   };
@@ -127,6 +132,7 @@ const CameraScreen: React.FC = () => {
   //if photo is taken, show preview
   if (photo) {
     return (
+      log.info("INFO: CameraScreen - displaying photo preview"),
       <SafeAreaView style={styles.previewContainer}>
         <Image source={{ uri: `file://${photo.path}` }} style={styles.previewImage} />
         <View style={styles.previewActions}>
@@ -145,6 +151,7 @@ const CameraScreen: React.FC = () => {
   }
   //if no camera device found
   if (!device) {
+    log.error("ERROR: CameraScreen - no camera device available");
     return (
       <SafeAreaView style={styles.center}>
         <Text style={styles.msg}>No camera device available.</Text>

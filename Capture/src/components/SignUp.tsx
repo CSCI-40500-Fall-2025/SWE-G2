@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { validateUsername, validateEmail, validatePassword, validateConfirmPassword} from '../utils/validation';
+import log from '../utils/logger';
 interface SignUpProps {
   onSwitchToSignIn: () => void;
 }
@@ -46,6 +47,7 @@ const SignUp: React.FC<SignUpProps> = ({ onSwitchToSignIn }) => {
     //username validation
     const usernameCheck = validateUsername(formData.username);
     if (!usernameCheck.valid) {
+      log.warn("WARNING: SignUp - username validation failed");
       newErrors.username = usernameCheck.error;
       isValid = false;
     }
@@ -53,6 +55,7 @@ const SignUp: React.FC<SignUpProps> = ({ onSwitchToSignIn }) => {
     //email validation
     const emailCheck = validateEmail(formData.email);
     if (!emailCheck.valid) {
+      log.warn("WARNING: SignUp - email validation failed");
       newErrors.email = emailCheck.error;
       isValid = false;
     }
@@ -60,6 +63,7 @@ const SignUp: React.FC<SignUpProps> = ({ onSwitchToSignIn }) => {
     //password validation
     const passwordCheck = validatePassword(formData.password);
     if (!passwordCheck.valid) {
+      log.warn("WARNING: SignUp - password validation failed");
       newErrors.password = passwordCheck.error;
       isValid = false;
     }
@@ -70,6 +74,7 @@ const SignUp: React.FC<SignUpProps> = ({ onSwitchToSignIn }) => {
       formData.confirmPassword
     );
     if (!confirmCheck.valid) {
+      log.warn("WARNING: SignUp - confirm password validation failed");
       newErrors.confirmPassword = confirmCheck.error;
       isValid = false;
     }

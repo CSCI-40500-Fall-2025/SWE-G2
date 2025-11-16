@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { validateEmail, validateSignInPassword } from "../utils/validation";
+import log from '../utils/logger'; // Add logger import
+
 interface SignInProps {
   onSwitchToSignUp: () => void;
   navigation: any;
@@ -28,6 +30,7 @@ const SignIn: React.FC<SignInProps> = ({ onSwitchToSignUp, navigation }) => {
     //email validation
     const emailCheck = validateEmail(formData.email);
     if (!emailCheck.valid) {
+      log.warn("WARNING: SignIn - email validation failed");
       newErrors.email = emailCheck.error;
       isValid = false;
     }
@@ -35,6 +38,7 @@ const SignIn: React.FC<SignInProps> = ({ onSwitchToSignUp, navigation }) => {
     //password validation
     const passwordCheck = validateSignInPassword(formData.password);
     if (!passwordCheck.valid) {
+      log.warn("WARNING: SignIn - password validation failed");
       newErrors.password = passwordCheck.error;
       isValid = false;
     }
@@ -48,6 +52,7 @@ const SignIn: React.FC<SignInProps> = ({ onSwitchToSignUp, navigation }) => {
 
     //if everything is valid, continue sign-in logic
     console.log('Validation passed. Navigating to HomeTabs...');
+    log.info("INFO: SignIn - user successfully signed in");
     navigation.navigate('HomeTabs');
     };
 
