@@ -21,3 +21,9 @@ app.use("/api/user", userRouter)
 app.listen(PORT , ()=>{
     console.log("Server started at PORT: ", PORT);
 })
+
+
+
+//Make sure to add a .env file in the same src folder with the following:
+//MONGO_URI=your_mongo_db_connection_string
+//PORT=5001 (or whatever port you want)

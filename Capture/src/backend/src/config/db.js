@@ -1,4 +1,4 @@
-import {mongoose} from 'mongoose';
+import mongoose from 'mongoose';
 export const connectDB = async() =>{
     try {
     // Debug log — make sure the env var is being read

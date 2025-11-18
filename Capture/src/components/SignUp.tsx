@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { validateUsername, validateEmail, validatePassword, validateConfirmPassword} from '../utils/validation';
 import log from '../utils/logger';
+import API_BASE from "../utils/api";
+
 interface SignUpProps {
   onSwitchToSignIn: () => void;
 }
@@ -83,38 +85,52 @@ const SignUp: React.FC<SignUpProps> = ({ onSwitchToSignIn }) => {
     return isValid;
   };
 
-  const handleSignUp = () => {
-    if (validateForm()) {
-      // Form is valid - proceed with sign up
-      console.log('Sign up data:', formData);
-      
-      // Here you would typically make an API call to your backend
-      // For now, we'll simulate a successful sign up
-      
-      Alert.alert(
-        'Success!',
-        'Account created successfully! Please sign in.',
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              // Clear form and switch to sign in
-              setFormData({
-                username: '',
-                email: '',
-                password: '',
-                confirmPassword: ''
-              });
-              onSwitchToSignIn();
-            }
-          }
-        ]
-      );
-    } else {
-      // Form is invalid - show error message
-      Alert.alert('Error', 'Please fix the errors in the form');
+const handleSignUp = async () => {
+  if (!validateForm()) {
+    Alert.alert("Error", "Please fix the errors in the form");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/user/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        // backend expects: name, user_name, email, password
+        user_name: formData.username,   // map your field name to backend
+        email: formData.email,
+        password: formData.password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      Alert.alert("Sign up failed", data.message || "Unknown error");
+      return;
     }
-  };
+
+    Alert.alert("Success!", "Account created successfully! Please sign in.", [
+      {
+        text: "OK",
+        onPress: () => {
+          // Clear form and switch to sign in
+          setFormData({
+            username: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          });
+          onSwitchToSignIn();
+        },
+      },
+    ]);
+  } catch (err) {
+    console.error(err);
+    Alert.alert("Error", "Could not connect to server");
+  }
+};
+
 
   return (
     <View style={styles.container}>
