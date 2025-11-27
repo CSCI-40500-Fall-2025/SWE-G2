@@ -15,7 +15,7 @@ import Homepage from './src/screens/homepage';
 import Friends from './src/screens/Friends';
 import Profile from './src/screens/Profile';
 import AuthScreen from './src/screens/AuthScreen';
-import CameraScreen from './src/screens/CameraScreen';
+import ImageUploadScreen from './src/screens/CameraScreen';
 
 import * as Sentry from '@sentry/react-native';
 import log from './src/utils/logger';
@@ -74,7 +74,7 @@ const HomeTabs: React.FC = () => {
     >
       <Tab.Screen name="Homepage" component={Homepage} />
       <Tab.Screen name="Profile" component={Profile} />
-      <Tab.Screen name="Camera" component={CameraScreen} />
+      <Tab.Screen name="Photos" component={ImageUploadScreen} />
       <Tab.Screen name="Friends" component={Friends} />
       <Tab.Screen name="TEST SIGNUP" component={AuthScreen} />
     </Tab.Navigator>

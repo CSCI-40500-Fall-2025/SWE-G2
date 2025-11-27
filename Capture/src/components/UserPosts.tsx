@@ -4,19 +4,26 @@ export default class UserPosts {
   imageURL: string;
   description: string;
   profilePhotoURL: string; // NEW
-
+  visibility: string;
   constructor(
     userID: string,
     dateofPost: Date,
     imageURL: string,
     description: string,
-    profilePhotoURL: string // NEW
+    profilePhotoURL: string, // NEW
+    visibility: string
   ) {
+    const allowedVisibility = ["public", "shared", "private"];
+    if (!allowedVisibility.includes(visibility)) {
+      throw new Error("Invalid visibility value");
+    }
+
     this.userID = userID;
     this.dateofPost = dateofPost;
     this.imageURL = imageURL;
     this.description = description;
     this.profilePhotoURL = profilePhotoURL; // NEW
+    this.visibility = visibility;
   }
 }
 

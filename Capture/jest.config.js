@@ -8,7 +8,5 @@ module.exports = {
     'node_modules/(?!(@react-native|react-native|@react-navigation|react-clone-referenced-element|@react-native-community|@sentry)/)',
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  moduleNameMapper: {
-    'react-native-vision-camera': '<rootDir>/__mocks__/react-native-vision-camera.js',
-  },
+
 };

@@ -14,19 +14,19 @@ const Homepage: React.FC = () => {
       new Date(),
       Image.resolveAssetSource(require('../assets/froakie.webp')).uri,
       'Look what I caught bro',
-      'https://i.pravatar.cc/150?img=15'
+      'https://i.pravatar.cc/150?img=15','public'
     ),
     new UserPosts(
       'DigletInYoBooty',
       new Date(2024, 6, 7),
 'https://static.wikia.nocookie.net/ficspecies/images/7/7a/Diglett.png/revision/latest?cb=20190806222311',      'Me when the gang pull up',
-      'https://i.pravatar.cc/150?img=22'
+      'https://i.pravatar.cc/150?img=22','public'
     ),
     new UserPosts(
       'MouseholdTheHousehold',
       new Date(2022, 11, 1),
 'https://static0.thegamerimages.com/wordpress/wp-content/uploads/2022/11/maushold.jpg',      'Too many mouthes to feed',
-      'https://i.pravatar.cc/150?img=4'
+      'https://i.pravatar.cc/150?img=4','public'
     ),
   ];
 
