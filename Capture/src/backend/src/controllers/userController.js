@@ -1,5 +1,5 @@
 // controllers/userController.js
-import User from "../models/User.js";
+import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 
 // GET /api/user
@@ -86,6 +86,42 @@ export async function deleteUser(req, res) {
 // =============== AUTH-SPECIFIC CONTROLLERS ===============
 
 // POST /api/user/register
+export async function loginUser(req, res) {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "Missing email or password" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    // ✅ FIX: Changed 'id' to '_id' to match Frontend expectations
+    return res.json({
+      message: "Login successful",
+      user: {
+        _id: user._id, // <--- THIS WAS THE ISSUE
+        name: user.name,
+        user_name: user.user_name,
+        email: user.email,
+        profilePhoto: user.profilePhoto // (Optional: useful to send this too)
+      },
+    });
+  } catch (error) {
+    console.error("Error: in loginUser method", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+// POST /api/user/register
 export async function registerUser(req, res) {
   try {
     const { name, user_name, email, password } = req.body;
@@ -93,37 +129,32 @@ export async function registerUser(req, res) {
     if (!user_name || !email || !password) {
       return res
         .status(400)
-        .json({ message: "Missing required fields (user_name, email, password)" });
+        .json({ message: "Missing required fields" });
     }
 
-    // If name not sent from frontend, we can default to user_name
     const finalName = name || user_name;
 
-    // Check if email or username already exists
     const existing = await User.findOne({
       $or: [{ email }, { user_name }],
     });
 
     if (existing) {
-      return res
-        .status(400)
-        .json({ message: "Email or username already in use" });
+      return res.status(400).json({ message: "Email or username already in use" });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
       name: finalName,
       user_name,
       email,
-      password: hashedPassword, // IMPORTANT: store hash, not plain text
+      password: hashedPassword,
     });
 
     return res.status(201).json({
       message: "User was created successfully",
       user: {
-        id: newUser._id,
+        _id: newUser._id,
         name: newUser.name,
         user_name: newUser.user_name,
         email: newUser.email,
@@ -134,44 +165,27 @@ export async function registerUser(req, res) {
     res.status(500).json({ message: "Internal server error" });
   }
 }
-
-// POST /api/user/login
-export async function loginUser(req, res) {
+export const uploadAvatar = async (req, res) => {
   try {
-    const { email, password } = req.body; // we can add username login later if needed
+    const { id } = req.params;
 
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Missing email or password" });
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
     }
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res
-        .status(400)
-        .json({ message: "Invalid email or password" });
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { profilePhoto: req.file.path },
+      { new: true } // Return the updated document
+    ).select("-password"); // Don't send back password
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res
-        .status(400)
-        .json({ message: "Invalid email or password" });
-    }
-
-    // Later: generate JWT here.
-    return res.json({
-      message: "Login successful",
-      user: {
-        id: user._id,
-        name: user.name,
-        user_name: user.user_name,
-        email: user.email,
-      },
-    });
+    res.status(200).json(updatedUser);
   } catch (error) {
-    console.error("Error: in loginUser method", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Avatar Upload Error:", error);
+    res.status(500).json({ message: "Server error" });
   }
-}
+};

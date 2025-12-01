@@ -7,6 +7,12 @@ import {
   getPostById,
   updatePost,
   deletePost,
+  addComment, 
+  deleteComment,
+  togglePostLike,
+  toggleCommentLike,
+  addReply,
+  toggleReplyLike
 } from "../controllers/postController.js";
 
 const router = express.Router();
@@ -30,5 +36,10 @@ router.get("/", getPosts);
 router.get("/:id", getPostById);
 router.put("/:id", upload.single("photo"), updatePost);
 router.delete("/:id", deletePost);
-
+router.post("/:id/comment", addComment);
+router.delete("/:id/comment/:commentId", deleteComment);
+router.put("/:id/like", togglePostLike);
+router.put("/:id/comment/:commentId/like", toggleCommentLike);
+router.post("/:id/comment/:commentId/reply", addReply);
+router.put("/:id/comment/:commentId/reply/:replyId/like", toggleReplyLike);
 export default router;

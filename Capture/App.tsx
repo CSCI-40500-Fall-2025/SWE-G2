@@ -16,6 +16,7 @@ import Friends from './src/screens/Friends';
 import Profile from './src/screens/Profile';
 import AuthScreen from './src/screens/AuthScreen';
 import ImageUploadScreen from './src/screens/CameraScreen';
+import PostDetailScreen from './src/screens/PostDetailScreen';
 
 import * as Sentry from '@sentry/react-native';
 import log from './src/utils/logger';
@@ -32,6 +33,7 @@ Sentry.init({
 type RootStackParamList = {
   AuthScreen: undefined;
   HomeTabs: undefined;
+  PostDetail: { post: any }; 
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -106,6 +108,18 @@ const App: React.FC = () => {
               }
             }}
           />
+          
+          <Stack.Screen 
+            name="PostDetail" 
+            component={PostDetailScreen} 
+            options={{ 
+              headerShown: false, 
+              title: 'Post',
+              headerBackTitle: 'Profile',
+              headerTintColor: '#000'
+            }} 
+          />
+
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

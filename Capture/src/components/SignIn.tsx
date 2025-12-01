@@ -5,8 +5,10 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,              
+  Alert,
 } from "react-native";
+// 1. IMPORT ASYNC STORAGE
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import { validateEmail, validateSignInPassword } from "../utils/validation";
 import log from "../utils/logger";
 import API_BASE from "../utils/api";
@@ -38,22 +40,17 @@ const SignIn: React.FC<SignInProps> = ({ onSwitchToSignUp, navigation }) => {
     const newErrors = { email: "", password: "" };
     let isValid = true;
 
-    // email validation
+    // Validation checks...
     const emailCheck = validateEmail(formData.email);
     if (!emailCheck.valid) {
-      log.warn("WARNING: SignIn - email validation failed");
       newErrors.email = emailCheck.error;
       isValid = false;
     }
-
-    // password validation
     const passwordCheck = validateSignInPassword(formData.password);
     if (!passwordCheck.valid) {
-      log.warn("WARNING: SignIn - password validation failed");
       newErrors.password = passwordCheck.error;
       isValid = false;
     }
-
     setErrors(newErrors);
     if (!isValid) return;
 
@@ -69,13 +66,32 @@ const SignIn: React.FC<SignInProps> = ({ onSwitchToSignUp, navigation }) => {
 
       const data = await response.json();
 
+      console.log("LOGIN RESPONSE:", JSON.stringify(data, null, 2));
+
       if (!response.ok) {
         Alert.alert("Sign in failed", data.message || "Unknown error");
         return;
       }
 
-      log.info("INFO: SignIn - user successfully signed in");
-      navigation.navigate("HomeTabs");
+
+      const userObj = data.user || data;
+      const userId = userObj._id || userObj.id;
+
+      if (userId) {
+        // Ensure it is a string before saving
+        await AsyncStorage.setItem('userId', String(userId));
+        
+        if (data.token) {
+          await AsyncStorage.setItem('userToken', data.token);
+        }
+
+        log.info(`INFO: SignIn - User ID ${userId} saved to storage`);
+        navigation.navigate("HomeTabs");
+      } else {
+        log.error("Login success but no User ID found in response", data);
+        Alert.alert("Error", "Login succeeded but user ID is missing.");
+      }
+
     } catch (err) {
       console.error(err);
       Alert.alert("Error", "Could not connect to server");

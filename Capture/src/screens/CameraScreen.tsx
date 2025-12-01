@@ -16,13 +16,14 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 import { launchImageLibrary, Asset } from 'react-native-image-picker';
+// 1. IMPORT ASYNC STORAGE
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import API_BASE from "../utils/api";
 import log from '../utils/logger';
 
 type Visibility = 'public' | 'private' | 'shared';
 
 const ImageUploadScreen: React.FC = () => {
-  // FIXED: Store the full asset object, not just the URI string
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [caption, setCaption] = useState('');
   const [visibility, setVisibility] = useState<Visibility>('private');
@@ -33,7 +34,7 @@ const ImageUploadScreen: React.FC = () => {
       const result = await launchImageLibrary({
         mediaType: 'photo',
         selectionLimit: 1,
-        quality: 0.8, // Reduced slightly for faster uploads
+        quality: 0.8,
       });
 
       if (result.didCancel) return;
@@ -44,7 +45,6 @@ const ImageUploadScreen: React.FC = () => {
         return;
       }
 
-      // Store the whole asset to access .type and .fileName later
       log.info('Image selected:', asset.uri);
       setSelectedAsset(asset);
 
@@ -62,34 +62,39 @@ const ImageUploadScreen: React.FC = () => {
   
     setIsUploading(true);
     try {
+      // --- FIX 1: GET REAL USER ID ---
+      const currentUserId = await AsyncStorage.getItem('userId');
+      console.log("🕵️ SPY 1 [Frontend]: ID from Storage is:", currentUserId);
+
+      if (!currentUserId) {
+        Alert.alert("Error", "You are not logged in. Please log out and back in.");
+        setIsUploading(false);
+        return;
+      }
+
       const form = new FormData();
 
-      // --- FIX 1: FILE DATA ---
-      // We must provide uri, name, and type exactly as the server expects.
+      // --- FIX 2: ORDER MATTERS ---
+      // Append text fields (especially userID) BEFORE the file.
+      // Many backends will ignore the ID if it comes after the binary file stream.
+      form.append('userID', currentUserId);
+      form.append('description', caption);
+      form.append('visibility', visibility);
+
+      // --- FIX 3: FILE DATA ---
       form.append('photo', {
         uri: Platform.OS === 'ios' ? selectedAsset.uri.replace('file://', '') : selectedAsset.uri,
         name: selectedAsset.fileName || `upload_${Date.now()}.jpg`,
         type: selectedAsset.type || 'image/jpeg', 
       } as any);
-
-      // --- FIX 2: SCHEMA MATCHING ---
-      form.append('description', caption); // Matches schema 'description'
-      form.append('visibility', visibility); // Matches schema 'visibility'
-      
-      // --- FIX 3: USER ID ---
-      // Your Schema requires an ObjectId. "12345" crashes Mongoose.
-      // TODO: Replace this with the real User ID from your Auth Context.
-      // This is a dummy valid ObjectId for testing:
-      form.append('userID', "654321654321654321654321"); 
   
-      log.info(`Uploading file: ${selectedAsset.fileName} type: ${selectedAsset.type}`);
+      console.log("🕵️ SPY 2 [Frontend]: Sending Upload Request...");
   
       const res = await fetch(`${API_BASE}/posts`, {
         method: 'POST',
         headers: {
-          // IMPORTANT: Do NOT set 'Content-Type': 'multipart/form-data'
-          // The browser/engine sets the boundary automatically.
           Accept: 'application/json',
+          // Content-Type is set automatically by FormData
         },
         body: form,
       });
@@ -153,7 +158,7 @@ const ImageUploadScreen: React.FC = () => {
                 onValueChange={(val) => setVisibility(val as Visibility)}
                 enabled={!isUploading}
                 dropdownIconColor="#fff"
-                style={{ color: '#fff' }} // Android text color
+                style={{ color: '#fff' }}
               >
                 <Picker.Item label="Private (only you)" value="private" />
                 <Picker.Item label="Shared (selected people)" value="shared" />
@@ -212,7 +217,7 @@ const styles = StyleSheet.create({
     padding: 12,
     color: '#fff',
     backgroundColor: 'rgba(255,255,255,0.02)',
-    textAlignVertical: 'top', // Fix for Android multiline
+    textAlignVertical: 'top', 
   },
   pickerWrapper: {
     borderRadius: 10,

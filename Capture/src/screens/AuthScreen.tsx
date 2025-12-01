@@ -1,41 +1,35 @@
-import React from 'react';
-import { StatusBar, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StatusBar, StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import SignIn from '../components/SignIn';
 import SignUp from '../components/SignUp';
-import log from '../utils/logger'; // Add logger import
+import log from '../utils/logger';
 
 interface AuthScreenProps {
-  navigation: any;
+  navigation: any; // Important: We pass this down to SignIn
 }
 
 const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
-  const [isSignUp, setIsSignUp] = React.useState<boolean>(false);
+  const [isSignUp, setIsSignUp] = useState<boolean>(false);
 
-  // Component lifecycle logs with error focus
-  React.useEffect(() => {
-    // DEBUG (1x)
+  useEffect(() => {
     log.debug("DEBUG: AuthScreen mounted - initializing authentication flow");
   }, []);
 
   const switchToSignUp = () => {
-    // INFO (1x)
-    log.info("INFO: User selected SignUp option");
+    log.info("INFO: Switching to SignUp view");
     setIsSignUp(true);
   };
 
   const switchToSignIn = () => {
-    // INFO (1x)
-    log.info("INFO: User selected SignIn option");
+    log.info("INFO: Switching to SignIn view");
     setIsSignUp(false);
   };
 
-  // If user wants to sign up, show the SignUp component
+  // --- Render Sign Up ---
   if (isSignUp) {
-    // INFO (1x)
-    log.info("INFO: Rendering SignUp component - new user registration");
-    
+    log.info("INFO: Rendering SignUp component");
     return (
       <SafeAreaView style={styles.flexContainer}>
         <StatusBar barStyle="dark-content" />
@@ -44,26 +38,26 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
     );
   }
 
+  // --- Render Sign In ---
   return (
     <SafeAreaView style={styles.flexContainer}>
       <StatusBar barStyle="dark-content" />
       
-      {/* Sign In Form */}
+      {/* We pass 'navigation' to SignIn so it can handle 
+         the redirect after a successful backend login 
+      */}
       <SignIn 
         onSwitchToSignUp={switchToSignUp} 
         navigation={navigation}
       />
       
-      {/* Sign Up Button */}
+      {/* Footer UI (Unchanged) */}
       <View style={styles.signUpContainer}>
         <Text style={styles.signUpText}>Don't have an account?</Text>
         <TouchableOpacity 
           style={styles.signUpButton} 
           onPress={switchToSignUp}
-          onPressIn={() => {
-            // DEBUG (1x)
-            log.debug("DEBUG: SignUp button pressed - user interaction detected");
-          }}
+          onPressIn={() => log.debug("DEBUG: SignUp button pressed")}
         >
           <Text style={styles.signUpButtonText}>Sign Up</Text>
         </TouchableOpacity>
@@ -83,6 +77,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
     backgroundColor: 'white',
+    // Fix for iPhone bottom safe area
+    paddingBottom: Platform.OS === 'ios' ? 0 : 20,
   },
   signUpText: {
     fontSize: 16,
