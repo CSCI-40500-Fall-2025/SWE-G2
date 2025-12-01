@@ -81,18 +81,41 @@ const Homepage: React.FC = () => {
     const text = commentInputs[postId];
     if (!text || text.trim() === '') return;
     if (!myUserId) { Alert.alert("Error", "Login required"); return; }
+
     try {
       let url = `${API_BASE}/posts/${postId}/comment`;
       if (replyingTo && replyingTo.postId === postId) {
         url = `${API_BASE}/posts/${postId}/comment/${replyingTo.commentId}/reply`;
       }
-      const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userID: myUserId, text: text.trim() }) });
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userID: myUserId, text: text.trim() }),
+      });
+
+      const responseData = await response.json();
+
       if (response.ok) {
+  
         fetchPosts(); 
         setCommentInputs(prev => ({ ...prev, [postId]: '' }));
         setReplyingTo(null); 
+      } else {
+
+        if (response.status === 400 && responseData.message.includes("toxic")) {
+          Alert.alert(
+            "Whoa there!",
+            "We detected that this comment might be toxic or offensive. Please keep the community friendly.",
+            [{ text: "Okay, I'll be nice" }]
+          );
+        } else {
+          Alert.alert("Error", responseData.message || "Failed to post.");
+        }
       }
-    } catch (error) { Alert.alert('Error', 'Connection failed'); }
+    } catch (error) { 
+      Alert.alert('Error', 'Connection to server failed'); 
+    }
   };
 
   const initiateReply = (postId: string, commentId: string, username: string) => {

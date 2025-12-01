@@ -1,5 +1,5 @@
 import Post from "../models/post.js";
-
+import { checkTextForToxicity } from "../mlServices.js";
 
 export const createPost = async (req, res) => {
     try {
@@ -57,19 +57,21 @@ export const getPostById = async (req, res) => {
 
 export const addComment = async (req, res) => {
     try {
-      const { id } = req.params; // Post ID
-      const { userID, text } = req.body; // Comment data
-  
+      const { id } = req.params;
+      const { userID, text } = req.body;
+      const isToxic = await checkTextForToxicity(text);
+      
+      if (isToxic) {
+        console.log(`🚫 Blocked toxic comment: "${text}"`);
+        return res.status(400).json({ message: "Comment contains toxic content and was rejected." });
+      }
       const updatedPost = await Post.findByIdAndUpdate(
         id,
-        {
-          $push: { comments: { userID, text } }, // MongoDB $push command
-        },
-        { new: true } // Return the updated post so we can show it immediately
+        { $push: { comments: { userID, text } } },
+        { new: true }
       );
   
       if (!updatedPost) return res.status(404).json({ message: "Post not found" });
-  
       res.status(200).json(updatedPost);
     } catch (err) {
       res.status(500).json({ message: err.message });
@@ -204,27 +206,25 @@ export const toggleCommentLike = async (req, res) => {
 };
 export const addReply = async (req, res) => {
     try {
-      const { id, commentId } = req.params; 
+      const { id, commentId } = req.params;
       const { userID, text } = req.body;
-  
-      console.log(`↩️ ADDING REPLY | Post: ${id} | Comment: ${commentId} | User: ${userID}`);
+
+      const isToxic = await checkTextForToxicity(text);
+      
+      if (isToxic) {
+        console.log(`🚫 Blocked toxic reply: "${text}"`);
+        return res.status(400).json({ message: "Reply contains toxic content and was rejected." });
+      }
   
       const post = await Post.findById(id);
       if (!post) return res.status(404).json({ message: "Post not found" });
-
-      const comment = post.comments.find(c => c._id.toString() === commentId);
-      if (!comment) {
-        console.error("❌ Comment not found");
-        return res.status(404).json({ message: "Comment not found" });
-      }
-
-      comment.replies.push({
-        userID: userID,
-        text: text
-      });
   
+      const comment = post.comments.id(commentId);
+      if (!comment) return res.status(404).json({ message: "Comment not found" });
+  
+      comment.replies.push({ userID, text });
+      
       await post.save();
-      console.log("✅ Reply Saved");
       
       const populatedPost = await Post.findById(id)
         .populate("userID", "user_name profilePhoto")
@@ -232,12 +232,10 @@ export const addReply = async (req, res) => {
         .populate("comments.replies.userID", "user_name");
   
       res.status(200).json(populatedPost);
-  
     } catch (err) {
-      console.error("❌ REPLY ERROR:", err);
       res.status(500).json({ message: err.message });
     }
-  };
+};
 export const toggleReplyLike = async (req, res) => {
     try {
         const { id, commentId, replyId } = req.params;

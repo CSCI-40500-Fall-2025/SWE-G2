@@ -99,13 +99,26 @@ const PostDetailScreen: React.FC = ({ route }: any) => {
         body: JSON.stringify({ userID: myUserId, text: commentText.trim() }),
       });
 
+      const responseData = await response.json();
+
       if (response.ok) {
         refreshPostData();
         setCommentText('');
         setReplyingTo(null);
+      } else {
+        if (response.status === 400 && responseData.message.includes("toxic")) {
+          Alert.alert(
+            "Whoa there!",
+            "We detected that this comment might be toxic or offensive. Please keep the community friendly.",
+            [{ text: "Okay, I'll be nice" }]
+          );
+        } else {
+          Alert.alert("Error", responseData.message || "Failed to send.");
+        }
       }
     } catch (error) {
       console.error(error);
+      Alert.alert("Error", "Network request failed.");
     }
   };
 
