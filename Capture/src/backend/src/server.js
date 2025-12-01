@@ -32,3 +32,4 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 //Make sure to add a .env file in the same src folder with the following:
 //MONGO_URI=your_mongo_db_connection_string
 //PORT=5001 (or whatever port you want)
+export default app
