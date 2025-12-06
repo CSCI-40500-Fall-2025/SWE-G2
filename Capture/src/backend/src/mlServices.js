@@ -1,41 +1,76 @@
-import * as toxicity from '@tensorflow-models/toxicity';
+import * as toxicity from "@tensorflow-models/toxicity";
+import Metrics from "./models/metrics.js"; 
+import FlaggedLog from "./models/flaggedLog.js"; 
+import PassedLog from "./models/passedLog.js"; 
 
-const threshold = 0.85;
-let model;
+let model = null; 
+const BASE_THRESHOLD = 0.85;
 
 export const loadModel = async () => {
-  console.log("⏳ Loading ML Toxicity Model...");
-  try {
-    model = await toxicity.load(threshold);
-    console.log("🤖 ML Model Loaded Successfully!");
-  } catch (error) {
-    console.error("❌ Failed to load ML Model:", error);
-  }
+    if (model) return model;
+    console.log("⏳ Loading ML Toxicity Model...");
+    try {
+        model = await toxicity.load(BASE_THRESHOLD);
+        console.log("🤖 ML Model Loaded Successfully!");
+    } catch (error) {
+        console.error("❌ Failed to load ML Model:", error);
+    }
+    return model;
+};
+
+const computeToxicityScore = (predictions) => {
+    let maxScore = 0;
+    predictions.forEach(pred => {
+        pred.results.forEach(result => {
+            const prob = result.probabilities[1];
+            if (prob > maxScore) maxScore = prob;
+        });
+    });
+    return maxScore;
 };
 
 export const checkTextForToxicity = async (text) => {
-  if (!model) {
-    console.warn("⚠️ Model not loaded yet, skipping check.");
-    return false;
-  }
+    if (!model) await loadModel();
+    const predictions = await model.classify([text]);
+    return computeToxicityScore(predictions); 
+};
 
-  const predictions = await model.classify([text]);
-  let isToxic = false;
-
-  predictions.forEach(prediction => {
-    const result = prediction.results[0];
+//----------------------------------------
+// UPDATED: Log to FlaggedLog OR PassedLog
+//----------------------------------------
+export const updateMetrics = async (score, wasBlocked, text) => {
     
-    if (result.match) {
-      isToxic = true;
-      
-      const confidence = (result.probabilities[1] * 100).toFixed(2);
-      
-      console.log(`⚠️ TOXICITY DETECTED:`);
-      console.log(`   Label: ${prediction.label}`);
-      console.log(`   Confidence: ${confidence}%`);
-      console.log(`   Text: "${text}"`);
-    }
-  });
+    // 1. Update Global Numbers
+    let metrics = await Metrics.findOne();
+    if (!metrics) metrics = new Metrics();
 
-  return isToxic;
+    const oldTotal = metrics.totalCommentsChecked;
+    const currentAvg = metrics.averageScore;
+
+    // Rolling Average Formula
+    const newAverage = ((currentAvg * oldTotal) + score) / (oldTotal + 1);
+
+    metrics.averageScore = newAverage;
+    metrics.totalCommentsChecked += 1;
+
+    // 2. Handle Logging based on status
+    if (wasBlocked) {
+        metrics.totalBlocked += 1;
+        
+        // Log to Flagged Logs (Keep for 30 days)
+        await FlaggedLog.create({
+            originalText: text,
+            score: score
+        });
+    } else {
+        metrics.totalAccepted += 1;
+
+        // Log to Passed Logs (Keep for 7 days)
+        await PassedLog.create({
+            originalText: text,
+            score: score
+        });
+    }
+
+    await metrics.save();
 };

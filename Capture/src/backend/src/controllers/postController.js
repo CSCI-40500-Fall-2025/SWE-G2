@@ -1,5 +1,5 @@
 import Post from "../models/post.js";
-import { checkTextForToxicity } from "../mlServices.js";
+import { checkTextForToxicity, updateMetrics } from "../mlServices.js";
 
 export const createPost = async (req, res) => {
     try {
@@ -54,29 +54,48 @@ export const getPostById = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch post" });
   }
 };
-
 export const addComment = async (req, res) => {
     try {
-      const { id } = req.params;
-      const { userID, text } = req.body;
-      const isToxic = await checkTextForToxicity(text);
-      
-      if (isToxic) {
-        console.log(`🚫 Blocked toxic comment: "${text}"`);
-        return res.status(400).json({ message: "Comment contains toxic content and was rejected." });
-      }
-      const updatedPost = await Post.findByIdAndUpdate(
-        id,
-        { $push: { comments: { userID, text } } },
-        { new: true }
-      );
-  
-      if (!updatedPost) return res.status(404).json({ message: "Post not found" });
-      res.status(200).json(updatedPost);
+        const { id } = req.params;
+        const { userID, text } = req.body;
+
+        // 1. Check Toxicity
+        const toxicityScore = await checkTextForToxicity(text);
+        
+        // 2. Define Threshold (Standardized to 0.85)
+        const wasBlocked = toxicityScore >= 0.85;
+
+        // 3. Update Metrics (Pass 'text' so it can be logged if blocked)
+        await updateMetrics(toxicityScore, wasBlocked, text);
+
+        if (wasBlocked) {
+            console.log(`🚫 Blocked toxic comment (${toxicityScore}): "${text}"`);
+            return res.status(400).json({
+                message: "Comment contains toxic content and was rejected.",
+                toxicityScore
+            });
+        }
+
+        // 4. Proceed if safe
+        const updatedPost = await Post.findByIdAndUpdate(
+            id,
+            { $push: { comments: { userID, text } } },
+            { new: true }
+        )
+            .populate("userID", "user_name profilePhoto")
+            .populate("comments.userID", "user_name")
+            .populate("comments.replies.userID", "user_name");
+
+        if (!updatedPost)
+            return res.status(404).json({ message: "Post not found" });
+
+        res.status(200).json(updatedPost);
+
     } catch (err) {
-      res.status(500).json({ message: err.message });
+        console.error("❌ addComment Error:", err);
+        res.status(500).json({ message: err.message });
     }
-  };
+};
 export const deleteComment = async (req, res) => {
     try {
         const { id, commentId } = req.params; 
@@ -206,34 +225,46 @@ export const toggleCommentLike = async (req, res) => {
 };
 export const addReply = async (req, res) => {
     try {
-      const { id, commentId } = req.params;
-      const { userID, text } = req.body;
+        const { id, commentId } = req.params;
+        const { userID, text } = req.body;
 
-      const isToxic = await checkTextForToxicity(text);
-      
-      if (isToxic) {
-        console.log(`🚫 Blocked toxic reply: "${text}"`);
-        return res.status(400).json({ message: "Reply contains toxic content and was rejected." });
-      }
-  
-      const post = await Post.findById(id);
-      if (!post) return res.status(404).json({ message: "Post not found" });
-  
-      const comment = post.comments.id(commentId);
-      if (!comment) return res.status(404).json({ message: "Comment not found" });
-  
-      comment.replies.push({ userID, text });
-      
-      await post.save();
-      
-      const populatedPost = await Post.findById(id)
-        .populate("userID", "user_name profilePhoto")
-        .populate("comments.userID", "user_name")
-        .populate("comments.replies.userID", "user_name");
-  
-      res.status(200).json(populatedPost);
+        // 1. Check Toxicity
+        const toxicityScore = await checkTextForToxicity(text);
+
+        // 2. Define Threshold (Standardized to 0.85 to match comments)
+        const wasBlocked = toxicityScore >= 0.85;
+
+        // 3. Update Metrics (Pass 'text' so it can be logged if blocked)
+        await updateMetrics(toxicityScore, wasBlocked, text);
+
+        if (wasBlocked) {
+            console.log(`🚫 Blocked toxic reply (${toxicityScore}): "${text}"`);
+            return res.status(400).json({
+                message: "Reply contains toxic content and was rejected.",
+                toxicityScore
+            });
+        }
+
+        // 4. Proceed if safe
+        const post = await Post.findById(id);
+        if (!post) return res.status(404).json({ message: "Post not found" });
+
+        const comment = post.comments.id(commentId);
+        if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+        comment.replies.push({ userID, text });
+        await post.save();
+
+        const populatedPost = await Post.findById(id)
+            .populate("userID", "user_name profilePhoto")
+            .populate("comments.userID", "user_name")
+            .populate("comments.replies.userID", "user_name");
+
+        res.status(200).json(populatedPost);
+
     } catch (err) {
-      res.status(500).json({ message: err.message });
+        console.error("❌ addReply Error:", err);
+        res.status(500).json({ message: err.message });
     }
 };
 export const toggleReplyLike = async (req, res) => {

@@ -10,6 +10,7 @@ import {
   loginUser,
   uploadAvatar
 } from "../controllers/userController.js";
+import { getMLPerformance } from "../controllers/mlController.js";
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -19,14 +20,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // ----- AUTH ROUTES -----
-router.post("/register", registerUser);  // POST /api/user/register
-router.post("/login", loginUser);        // POST /api/user/login
+router.post("/register", registerUser);
+router.post("/login", loginUser);
+
+router.get("/metrics/performance", getMLPerformance);
 
 // ----- EXISTING CRUD ROUTES -----
-router.get("/", getUsers);               // GET /api/user
-router.get("/:id", getUsersById);        // GET /api/user/:id
-router.post("/", createUser);            // POST /api/user  (can reuse for admin/testing)
-router.put("/:id", updateUser);          // PUT /api/user/:id
-router.delete("/:id", deleteUser);       // DELETE /api/user/:id
+router.get("/", getUsers);               
+router.get("/:id", getUsersById); // ⚠️ This catches everything else!
+router.post("/", createUser);            
+router.put("/:id", updateUser);          
+router.delete("/:id", deleteUser);       
 router.put("/:id/avatar", upload.single("photo"), uploadAvatar);
+
 export default router;
